@@ -52,12 +52,67 @@
       public static void main(String[] args) {
           Solution solution = new LongestPalindromicSubstring().new Solution();
 
-          System.out.println(solution.longestPalindrome("ac"));
+          System.out.println(solution.longestPalindrome("ab"));
+          System.out.println(solution.longestPalindrome2("ab"));
       }
 
       //leetcode submit region begin(Prohibit modification and deletion)
       class Solution {
-          public String longestPalindrome(String s) {
+
+          /**
+           * Manacher 算法 优化
+           * @param s
+           * @return
+           */
+          public String longestPalindrome(String s){
+              int len = s.length();
+              if (s == null || len < 1)
+                  return s;
+              // 添加辅助字符
+              String str = addBoundaries(s,'#');
+
+              int sLen = len * 2 + 1;
+              int max = 1;
+              int start = 0;
+              int maxRight = 0 ,center = 0;
+
+              int[] p = new int[sLen];
+              for (int i = 0; i < sLen ; i++) {
+
+                if (i < maxRight){
+                    int mirror = center * 2 - i;
+                    p[i] = Math.min(maxRight - 1 , p[mirror]);
+                }
+
+                  // 下一次尝试扩散的左右起点，能扩散的步数直接加到 p[i] 中
+                  int left = i - (1 + p[i]);
+                  int right = i + (1 + p[i]);
+
+                  while (left >= 0  && right < sLen && str.charAt(left) == str.charAt(right)){
+                      p[i]++;
+                      left --;
+                      right ++;
+                  }
+
+                  // 判断是否需要更新 maxRight
+                  if (i + p[i] > maxRight){
+                      center = i;
+                      maxRight = i + p[i];
+                  }
+
+                  if (p[i] > max){
+                      // 记录最长回文子串的长度和相应它在原始字符串中的起点
+                      max = p[i];
+                      start = (i - max) / 2;
+                  }
+
+              }
+
+
+              return s.substring(start, start + max);
+          }
+
+          public String longestPalindrome2(String s) {
 
               int len = s.length();
               if (len < 2){
