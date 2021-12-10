@@ -52,18 +52,42 @@
 // 
 // Related Topics 字符串 👍 1389 👎 0
 
-  
+
   package com.dong.leetcode.editor.cn;
-  public class ZigzagConversion{
+
+  public class ZigzagConversion {
       public static void main(String[] args) {
-           Solution solution = new ZigzagConversion().new Solution();
+          Solution solution = new ZigzagConversion().new Solution();
+          System.out.println(solution.convert("PAYPALISHIRING",3));
       }
+
       //leetcode submit region begin(Prohibit modification and deletion)
-class Solution {
-    public String convert(String s, int numRows) {
-        return "";
-    }
-}
+      class Solution {
+          public String convert(String s, int numRows) {
+              if (numRows < 1) {
+                  return s;
+              }
+
+              String[] array = new String[numRows + 1];
+              char[] chars = s.toCharArray();
+              int x = numRows * 2 - 2;
+              for (int i = 0; i < s.length(); i++) {
+
+                  int mode = i % x ;
+                  array[mode] = array[mode] == null ? "" : array[mode];
+                  array[mode] = array[mode] + s.charAt(i);
+
+              }
+
+              StringBuilder builder = new StringBuilder();
+
+              for (int i = 0; i < array.length ; i++) {
+                  builder.append(array[i]);
+              }
+
+              return builder.toString();
+          }
+      }
 //leetcode submit region end(Prohibit modification and deletion)
 
   }
